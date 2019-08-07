@@ -17,11 +17,13 @@ func main() {
 		TrimMessages:  true,
 	})
 	log.SetOutput(os.Stdout)
+	log.SetLevel(log.InfoLevel)
 
 	dynHosts, updateHost := GetDynHosts(os.Args[1])
 
 	var (
-		ip string
+		ip    string
+		nochg uint
 	)
 
 	ip, err := GetIP()
@@ -30,9 +32,12 @@ func main() {
 	}
 
 	for i, host := range dynHosts {
-		if updateHost[i] {
-			UpdateDynHost(host, ip)
+		if updateHost[i] && UpdateDynHost(host, ip) {
+			nochg += 1
 		}
+	}
+	if nochg == uint(len(dynHosts)) {
+		log.Info("All IPs were up to date")
 	}
 }
 
@@ -72,15 +77,18 @@ func SendRequest(url, login, passwd string) string {
 	return s
 }
 
-func UpdateDynHost(host DynamicHost, ip string) {
+func UpdateDynHost(host DynamicHost, ip string) (nochg bool) {
 	url := GetUrl(host.UrlTemplate, host.Hostname, ip)
 	resp := SendRequest(url, host.Login, host.Password)
 
+	nochg = false
 	if strings.Contains(resp, "good") {
 		log.Info("Update successful for " + host.Hostname + " : " + resp)
 	} else if strings.Contains(resp, "nochg") {
-		log.Warn("Update didn't do anything for " + host.Hostname + " : " + resp)
+		log.Debug("Update didn't do anything for " + host.Hostname + " : " + resp)
+		nochg = true
 	} else {
 		log.Error("Update failed for " + host.Hostname + " : " + resp)
 	}
+	return
 }
