@@ -50,14 +50,20 @@ func GetIP() string {
 
 	regex := regexp.MustCompile(`\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}`)
 
+	failedCount := 0
 	for _, ipGiver := range ipGivers {
 		resp, err := http.Get(ipGiver)
 		if err != nil {
-			log.Error("Could not get IP from " + ipGiver)
+			log.Debug("Could not get IP from " + ipGiver)
+			failedCount++
 			continue
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		return regex.FindString(string(body))
+	}
+
+	if failedCount == len(ipGivers) {
+		log.Fatal("Could not get public IP")
 	}
 
 	return ""
