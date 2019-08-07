@@ -39,7 +39,7 @@ func main() {
 	}
 }
 
-func GetIP() string {
+func GetIP() (ip string) {
 
 	ipGivers := [...]string{
 		"https://ipinfo.io/ip",
@@ -59,14 +59,15 @@ func GetIP() string {
 			continue
 		}
 		body, err := ioutil.ReadAll(resp.Body)
-		return regex.FindString(string(body))
+		ip = regex.FindString(string(body))
+		break
 	}
 
 	if failedCount == len(ipGivers) {
 		log.Fatal("Could not get public IP")
 	}
 
-	return ""
+	return
 }
 
 func GetUrl(urlTemplate, hostname, ip string) (url string) {
