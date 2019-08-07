@@ -2,6 +2,7 @@
   <configuration default="false" name="go build armv7" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="dyndnsclient" />
     <working_directory value="$PROJECT_DIR$/" />
+    <go_parameters value="-o D:\Projets\GoProjects\src\github.com\Agurato\dyndnsclient\builds\Linux-armv7\update" />
     <envs>
       <env name="GOOS" value="linux" />
       <env name="GOARCH" value="arm" />
@@ -11,7 +12,7 @@
     <filePath value="$PROJECT_DIR$/" />
     <package value="github.com/Agurato/dyndnsclient" />
     <directory value="$PROJECT_DIR$/" />
-    <output_directory value="$PROJECT_DIR$/builds/linux_arm7" />
+    <output_directory value="$PROJECT_DIR$/builds/Linux-armv7" />
     <option name="run" value="false" />
     <method v="2" />
   </configuration>
