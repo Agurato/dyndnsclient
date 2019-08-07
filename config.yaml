@@ -1,0 +1,18 @@
+# Global parameters
+login: userglobal
+passwd: passglobal
+url: http://hostglobal.url/nic/update?system=dyndns&hostname={{HOSTNAME}}&myip={{IP}} # Use {{HOSTNAME}} and {{IP}} as template
+
+# 'hosts' is an array
+hosts:
+  # This first host will use global parameters
+  - host: subdomain1.example.com
+  # This second host will use its own login/password
+  - host: subdomain2.example.com
+    login: user2
+    passwd: pass2
+  # This third host will use its own parameters
+  - host: subdomain3.example.com
+    login: user3
+    passwd: pass3
+    url: http://host2.url/update?host={{HOSTNAME}}&ip={{IP}}
