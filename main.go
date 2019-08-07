@@ -4,10 +4,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
 	nested "github.com/antonfisher/nested-logrus-formatter"
-	"github.com/glendc/go-external-ip"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -26,10 +26,7 @@ func main() {
 		nochg uint
 	)
 
-	ip, err := GetIP()
-	if err != nil {
-		log.Fatal(err)
-	}
+	ip = GetIP()
 
 	for i, host := range dynHosts {
 		if updateHost[i] && UpdateDynHost(host, ip) {
@@ -41,17 +38,28 @@ func main() {
 	}
 }
 
-func GetIP() (string, error) {
-	// Create the default consensus,
-	// using the default configuration and no logger.
-	consensus := externalip.DefaultConsensus(nil, nil)
-	// Get your IP,
-	// which is never <nil> when err is <nil>.
-	ip, err := consensus.ExternalIP()
-	if err == nil {
-		return ip.String(), nil
+func GetIP() string {
+
+	ipGivers := [...]string{
+		"https://ipinfo.io/ip",
+		"http://checkip.dyndns.com/",
+		"https://api.ipify.org/?format=text",
+		"https://myexternalip.com/raw",
+		"http://whatismyip.akamai.com/"}
+
+	regex := regexp.MustCompile(`\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}`)
+
+	for _, ipGiver := range ipGivers {
+		resp, err := http.Get(ipGiver)
+		if err != nil {
+			log.Error("Could not get IP from " + ipGiver)
+			continue
+		}
+		body, err := ioutil.ReadAll(resp.Body)
+		return regex.FindString(string(body))
 	}
-	return "", err
+
+	return ""
 }
 
 func GetUrl(urlTemplate, hostname, ip string) (url string) {
