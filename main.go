@@ -15,6 +15,7 @@ func main() {
 	log.SetFormatter(&nested.Formatter{
 		ShowFullLevel: true,
 		TrimMessages:  true,
+		NoColors:      true,
 	})
 	log.SetOutput(os.Stdout)
 	log.SetLevel(log.InfoLevel)
