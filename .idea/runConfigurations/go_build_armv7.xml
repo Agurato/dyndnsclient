@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="go build armv7" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="dyndnsclient" />
+    <working_directory value="$PROJECT_DIR$/" />
+    <envs>
+      <env name="GOOS" value="linux" />
+      <env name="GOARCH" value="arm" />
+      <env name="GOARM" value="7" />
+    </envs>
+    <kind value="PACKAGE" />
+    <filePath value="$PROJECT_DIR$/" />
+    <package value="github.com/Agurato/dyndnsclient" />
+    <directory value="$PROJECT_DIR$/" />
+    <output_directory value="$PROJECT_DIR$/builds/linux_arm7" />
+    <option name="run" value="false" />
+    <method v="2" />
+  </configuration>
+</component>
